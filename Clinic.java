@@ -3,18 +3,19 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.InputMismatchException;
+
 /**
- * Driver class to demonstrate a Clinic treating various patients
+ * Clinic class to with methods to scan and add patients
  */
 public class Clinic {
     private File patientFile;
     private int day;
-    public Clinic(String fileName) throws FileNotFoundException{
-        this(new File (fileName));
-    }
     public Clinic(File file){
         patientFile = file;
         this.day = 1;
+    }
+    public Clinic(String fileName) {
+        this(new File(fileName));
     }
     public String addTime(String timeIn, int treatmentTime){
         int hours = Integer.parseInt(timeIn) / 100;
@@ -33,20 +34,22 @@ public class Clinic {
         }
     }
     public String nextDay(File file) throws FileNotFoundException{
-        Scanner input = new Scanner(System.in);
-        Scanner fileScan = new Scanner(file);
+        Scanner input = null;
+        Scanner fileScan = null;
+        input = new Scanner(System.in);
+        fileScan = new Scanner(file);
         String name = "";
         String type = "";
         double rate = 0;
         int miceRate = 0;
         String timeIn = "";
         String timeOut = "";
-        String line = null;
+        String line = "";
         Pet pet = null;
-        String [] tokens = null;
+        String [] tokens;
 		double health = 0;
         int painLevel = 0;
-        String info = null;
+        String info = "";
         day = day + 1;
         while (fileScan.hasNextLine()){
             line = fileScan.nextLine();
@@ -80,9 +83,9 @@ public class Clinic {
                     }
                 }
                 if(type.equals("Dog")){
-                    pet = new Dog(name,health,painLevel,rate);
+                    pet = new Dog(name,health,painLevel,Double.parseDouble(tokens[2]));
                 } else if (type.equals("Cat")) {
-                    pet = new Cat(name,health,painLevel,miceRate);
+                    pet = new Cat(name,health,painLevel,Integer.parseInt(tokens[2]));
                 }
                 pet.speak();
                 System.out.println();
@@ -91,8 +94,7 @@ public class Clinic {
                 pet.treat();
                 timeOut = addTime(timeIn,pet.treat());
                 //[Name],[Species],[DroolRate/MiceCaught],[Day],[EntryTime],[ExitTime],[InitialHealth],[InitialPainLevel]
-                info += String.format("%s,%s,%.1f,%d,%s,%s,%.1f,%d",name, type, rate, day, timeIn, timeOut, health, painLevel);
-                
+                info += String.format("%s,%s,%s,%d,%s,%s,%.1f,%d\n",name, type, tokens[2], day, timeIn, timeOut, health, painLevel);
             } else {
                 throw new InvalidPetException();
             }       
@@ -106,58 +108,43 @@ public class Clinic {
         return this.nextDay(new File(fileName));
     }
 
-    public boolean addToFile(String patientInfo){
+    boolean addToFile(String patientInfo){
         PrintWriter writeFile;
-        Scanner fileScan = null;
+        Scanner fileScan;
         String [] tokens = patientInfo.split(",");
         String name = tokens [0];
         String detailAdded = String.format(",%s,%s,%s,%s,%s", tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]);
-        String [] patientList = null;
+        String [] patientList;
         String Appointment = "";
-
-
-
         try {
             fileScan = new Scanner(patientFile);
-            String line = null;
-
-
-
+            String line = "";
             while(fileScan.hasNextLine()) {
                 line = fileScan.nextLine();
                 Appointment = Appointment + line + "\n";
-
-
-
             }
             patientList = Appointment.split("\n");
             fileScan.close();
-
-            
         } catch(FileNotFoundException e){
             return false;
         }
-
         try {
             writeFile = new PrintWriter(patientFile);
-            boolean oldPatient = false;
+            boolean returningP = false;
             for (String patient : patientList) {
                 if (patient.contains(name)) {
-                    writeFile.println(patient + detailAdded + "\n");
-                    oldPatient = true;
+                    writeFile.println(patient + detailAdded);
+                    returningP = true;
                 } else {
-                    writeFile.println(patient + "\n");
+                    writeFile.println(patient);
                 }
             }
-            if(!oldPatient){
+            if(!returningP){
                 writeFile.println(patientInfo);
             }
             writeFile.close();
             return true;
-
-
-            
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             return false;
         }
     }

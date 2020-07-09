@@ -1,18 +1,41 @@
+//
 public class Dog extends Pet {
     private int minutes;
     private double droolRate;
     public String type = "dog";
+    /**
+     * Dog constructor takes
+     * @param name
+     * @param health
+     * @param painLevel
+     * chain with the second constructor
+     */
     public Dog(String name, double health, int painLevel){
         this(name, health, painLevel, 5.0);
     }
+    /**
+     * Dog secon contructor takes
+     * @param name represent the name
+     * @param health represent the health
+     * @param painLevel represent the pain level
+     * @param droolRate represent the drool rate
+     */
     public Dog(String name, double health, int painLevel, double droolRate){
         super(name, health, painLevel);
+        
         this.droolRate = droolRate;
     }
+    /**
+     * getter for drool rate
+     * @return
+     */
     public double getDroolRate(){
         return droolRate;
     }
     @Override
+    /**
+     * mehtos override parent's treat method
+     */
     public int treat() {
         // TODO Auto-generated method stub
         super.heal();

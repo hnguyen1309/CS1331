@@ -5,6 +5,13 @@ public class Cat extends Pet {
     public Cat(String name, double health, int painLevel){
         this(name, health, painLevel, 0);
     }
+    /**
+     * methos
+     * @param name
+     * @param health
+     * @param painLevel
+     * @param miceCaught
+     */
     public Cat(String name, double health, int painLevel, int miceCaught){
         super(name, health, painLevel);
         this.miceCaught = miceCaught;

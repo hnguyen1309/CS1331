@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 public class ClinicDriver {
 
     public static void main(String[] args) {
-        Clinic clinic = new Clinic("Patients.csv");
+        Clinic clinic = new Clinic("Patients_copy.csv");
         String dayOneReport = "";
         try {
             dayOneReport = clinic.nextDay("Appointments.csv");
